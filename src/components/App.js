@@ -1,18 +1,21 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { Fragment } from "react";
+import { Fragment, useState } from "react";
 import GlobalStyle from "../theme/GlobalStyle";
+import UserContext from "../contexts/UserContext";
+
 import ScreenLogin from "./ScreenLogin";
 import ScreenHabits from "./ScreenHabits/ScreenHabits";
 import ScreenHistoric from "./ScreenHistoric";
 import ScreenRegister from "./ScreenRegister";
 import ScreenToday from "./ScreenToday";
-
 export default function App() {
+    const [user, setUser] = useState("")
     return (
-        <Fragment>
+        <UserContext.Provider value={{user, setUser}}>
             <GlobalStyle />
             <BrowserRouter>
             <Routes>
+
                 <Route path="/" element={<ScreenLogin />} />
                 <Route path="/cadastro" element={<ScreenRegister />} />
                 <Route path="/habitos" element={<ScreenHabits />} />
@@ -20,6 +23,7 @@ export default function App() {
                 <Route path="/historico" element={<ScreenHistoric />} />
             </Routes>
         </BrowserRouter>
-        </Fragment>
+    
+        </UserContext.Provider>
     )
 }

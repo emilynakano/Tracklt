@@ -2,10 +2,14 @@ import styled from 'styled-components';
 import { Link, useNavigate } from "react-router-dom";
 import { useState, React } from "react";
 import axios from "axios"
+import { useContext } from "react"
+import UserContext from '../contexts/UserContext';
 
 export default function ScreenLogin () {
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
+
+    const  {setUser} = useContext(UserContext)
 
     const navigate = useNavigate()
 
@@ -16,6 +20,7 @@ export default function ScreenLogin () {
         }
         const promise = axios.post("https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/auth/login", body);
         promise.then(res => {
+            setUser(res.data)
             navigate("/habitos")
         })
     }

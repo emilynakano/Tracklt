@@ -1,29 +1,41 @@
 import styled from "styled-components";
 import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
-import { React, useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import CreateHabit from "./CreateHabit";
 import Saved from "./Saved";
-
+import UserContext from "../../contexts/UserContext";
+import axios from "axios";
 
 export default function ScreenHabits () {
     const [createHabit, setCreateHabit] = useState(false)
-    const [saved, setSaved] = useState(false)
+    const [habits, setHabits] = useState([]);
 
+    const {user} = useContext(UserContext);
+
+    useEffect(()=> {
+        const config = {
+            headers: {
+                Authorization: `Bearer ${user.token}`
+            }
+        }
+        const promise = axios.get("https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits", config);
+        promise.then(res => setHabits(res.data))
+    })
     const percentage = 80;
     return (
         <Container>
             <Header>
                 <h1>Tracklt</h1>
-                <img src="https://yt3.ggpht.com/ytc/AKedOLQ6Ief26j8b1lgSA1OpXSCzJBlnlEEsWtQAfdwB=s900-c-k-c0x00ffffff-no-rj" />
+                <img src={user.image} />
             </Header>
             <Main>
                 <Tittle>
                     <h1>Meus hábitos</h1> 
                     <button onClick={()=> setCreateHabit(true)}>+</button>
                 </Tittle>
-                {createHabit ? <CreateHabit setSaved={setSaved} /> : ""}
-                {saved ? <Saved />: <h2>Você não tem nenhum hábito cadastrado ainda. Adicione um hábito para começar a trackear!</h2>}
+                {createHabit ? <CreateHabit setCreateHabit={setCreateHabit}/> : ""}
+                {habits == [] ? <h2>Você não tem nenhum hábito cadastrado ainda. Adicione um hábito para começar a trackear!</h2> : habits.map((habit) => <Saved habit={habit}/>)}
               
 
             </Main>
@@ -52,7 +64,8 @@ export default function ScreenHabits () {
     )
 }
 const Container = styled.div`
-    height: 600px;
+    height: 100%;
+    padding-bottom: 15px;
     background:#E5E5E5;
 `;
 const Footer = styled.footer`
@@ -110,6 +123,7 @@ const Header = styled.header`
 const Main = styled.div`
     margin: 0 20px;
     margin-top:70px;
+    margin-bottom:90px;
     h2 {
         font-family: 'Lexend Deca';
         font-style: normal;

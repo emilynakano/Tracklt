@@ -1,24 +1,41 @@
-import { React, useState } from 'react';
+import  React, { useState, useEffect, useContext } from 'react';
 import styled from "styled-components";
 import OptionsDay from "./OptionsDay";
+import UserContext from "../../contexts/UserContext";
+import axios from "axios"
 
 export default function CreateHabit (props) {
-    const {setSaved} = props;
+    const { setCreateHabit} = props;
+    const [habito, setHabito] = useState("")
     return (
+
         <Container>
-            <input type='text' placeholder='nome do hábito' />
+            <input value={habito} onChange={(e)=> setHabito(e.target.value)} type='text' placeholder='nome do hábito' />
             <OptionsDay />
-            <Finished setSaved={setSaved}/>
+            <Finished habito={habito} setCreateHabit={setCreateHabit}/>
         
         </Container>
     )
 }
+
 function Finished(props) {
-    const {setSaved} = props;
+    const {user} = useContext(UserContext)
+    const {setCreateHabit, habito} = props;
     return (
         <Buttons>
-            <h1>Cancelar</h1>
-            <button onClick={()=> setSaved(true)}>
+            <h1 onClick={()=> setCreateHabit(false)}>Cancelar</h1>
+            <button onClick={()=> {
+                    const config = {
+                        headers: {
+                            Authorization: `Bearer ${user.token}`
+                        }
+                    }
+                    const body = {
+                        name: habito,
+                        days: [2, 3, 0] // segunda, quarta e sexta
+                    }
+                    axios.post("https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits", body, config);
+                    }}>
                 <h1>Salvar</h1>
             </button>
         </Buttons>

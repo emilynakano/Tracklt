@@ -54,7 +54,8 @@ export default function ScreenToday () {
             </Header>
             <Main>
                 <h1>{dia}, {data}</h1>
-                <h2>Nenhum hábito concluído ainda</h2>
+                {feito == 0 ? <h2>Nenhum hábito concluído ainda</h2> : <h3>{parseInt(percentage)}% dos habitos concluidos</h3>}
+            
                 {habitsToday.map((habit)=> <HabitToday setAtualization={setAtualization} atualization={atualization} habit={habit} />)}
 
             </Main>
@@ -164,6 +165,14 @@ h2 {
     line-height: 16px;
     color: #666666;
 
+}
+h3 {
+    font-family: 'Lexend Deca';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 17.976px;
+    line-height: 22px;
+    color: #8FC549;
 }
 .habito {
     background-color:#ffffff;

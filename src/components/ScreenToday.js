@@ -7,12 +7,13 @@ import axios from "axios";
 import {Link} from "react-router-dom";
 import dayjs from 'dayjs'
 import advancedFormat from 'dayjs/plugin/advancedFormat';
+import percentageContext from "../contexts/percentageContext";
 
 export default function ScreenToday () {
     const [atualization, setAtualization] = useState("")
     const {user} = useContext(UserContext);
     const [habitsToday, setHabitsToday] = useState([])
-    const percentage = 80;
+    const {percentage, setPercentage} = useContext(percentageContext)
     dayjs.extend(advancedFormat);
     const data = dayjs().format('DD/MM')
     let diasSemana = ['Domingo',
@@ -34,8 +35,16 @@ export default function ScreenToday () {
         }
         const promise = axios.get("https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/today", config);
         promise.then(res => {setHabitsToday(res.data)
-   console.log(res.data)})
+        console.log(habitsToday)})
     }, [atualization])
+    let feito = 0;
+    for(let i = 0; i < habitsToday.length; i ++) {
+        if(habitsToday[i].done) {
+            feito += 1;
+        }
+    }
+    console.log(feito)
+    setPercentage((feito / habitsToday.length) * 100);
     
     return (
         <Container>

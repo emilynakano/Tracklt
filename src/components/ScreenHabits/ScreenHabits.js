@@ -7,11 +7,12 @@ import Saved from "./Saved";
 import UserContext from "../../contexts/UserContext";
 import axios from "axios";
 import {Link} from "react-router-dom";
-
+import percentageContext from "../../contexts/percentageContext";
 export default function ScreenHabits () {
     const [atualization, setAtualization] = useState("")
     const [createHabit, setCreateHabit] = useState(false)
     const [habits, setHabits] = useState([]);
+    const {percentage, setPercentage} = useContext(percentageContext)
     console.log(habits)
 
     const {user} = useContext(UserContext);
@@ -25,7 +26,6 @@ export default function ScreenHabits () {
         const promise = axios.get("https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits", config);
         promise.then(res => setHabits(res.data))
     }, [atualization])
-    const percentage = 80;
     return (
         <Container>
             <Header>

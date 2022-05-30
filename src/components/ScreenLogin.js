@@ -21,7 +21,7 @@ export default function ScreenLogin () {
         const promise = axios.post("https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/auth/login", body);
         promise.then(res => {
             setUser(res.data)
-            navigate("/habitos")
+            navigate("/hoje")
         })
     }
     return (

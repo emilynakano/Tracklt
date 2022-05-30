@@ -4,6 +4,8 @@ import OptionsDay from "./OptionsDay";
 import DaysContext from "../../contexts/DaysContext"
 import UserContext from "../../contexts/UserContext";
 import axios from "axios"
+import * as Loader from "react-loader-spinner";
+
 
 export default function CreateHabit (props) {
     const { setCreateHabit, atualization, setAtualization} = props;
@@ -23,30 +25,45 @@ function Finished(props) {
     const {user} = useContext(UserContext)
     const {setDay, day} = useContext(DaysContext)
     const {setCreateHabit, habito, atualization, setAtualization} = props;
+    const [loading, setLoading] = useState(false)
+
+    function Send() {
+        setLoading(true)
+        const config = {
+            headers: {
+                Authorization: `Bearer ${user.token}`
+            }
+        }
+        const body = {
+            name: habito,
+            days: day
+        }
+        const promise = axios.post("https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits", body, config);
+        promise.then(res => {
+            if(atualization == "changes") {
+                setAtualization("AnotherChanges")
+            } else {
+                setAtualization("changes")
+            }
+            setCreateHabit(false)})
+        setDay([])
+    }
     return (
         <Buttons>
             <h1 onClick={()=> setCreateHabit(false)}>Cancelar</h1>
-            <button onClick={()=> {
-                    const config = {
-                        headers: {
-                            Authorization: `Bearer ${user.token}`
-                        }
-                    }
-                    const body = {
-                        name: habito,
-                        days: day
-                    }
-                    const promise = axios.post("https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits", body, config);
-                    promise.then(res => {
-                        if(atualization == "changes") {
-                            setAtualization("AnotherChanges")
-                        } else {
-                            setAtualization("changes")
-                        }
-                        setCreateHabit(false)})
-                    setDay([])
-                    }}>
-                <h1>Salvar</h1>
+            <button onClick={Send}>
+                {loading ?
+                <div className="load">
+                    <Loader.ThreeDots
+                    color="white"
+                    height={30}
+                    width={30}
+                    timeout={3000}
+                    />
+                </div>
+                :
+                <h1>Salvar</h1>}
+                
             </button>
         </Buttons>
     )
@@ -98,9 +115,17 @@ const Buttons = styled.div`
         height: 35px;
         background: #52B6FF;
         border-radius: 5px;
+        display:flex;
+        flex-direction:center;
+        justify-content:center;
         h1 {
-            margin: 5px;
+            text-align:center;
+            margin: 0 auto;
             color:#FFFFFF;
+            margin-top:5px;
+        }
+        .load {
+            margin: 0 auto;
         }
     }
 

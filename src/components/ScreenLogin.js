@@ -4,16 +4,18 @@ import { useState, React } from "react";
 import axios from "axios"
 import { useContext } from "react"
 import UserContext from '../contexts/UserContext';
+import * as Loader from "react-loader-spinner";
 
 export default function ScreenLogin () {
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
-
     const  {setUser} = useContext(UserContext)
+    const [loading, setLoading] = useState(false)
 
     const navigate = useNavigate()
 
     function Login() {
+        setLoading(true)
         const body = {
             email,
             password
@@ -23,6 +25,10 @@ export default function ScreenLogin () {
             setUser(res.data)
             navigate("/hoje")
         })
+        promise.catch(()=>{
+            alert("preencha os campos corretamente <3")
+            setLoading(false)
+        })
     }
     return (
         <>
@@ -30,13 +36,47 @@ export default function ScreenLogin () {
                 <img src='img/logo.png'/>
             </Logo>
             <Container>
+           {loading ?
+           <>
+           <Input disabled value={email} onChange={(e)=> setEmail(e.target.value) } type="email" placeholder='email' /> 
+           <Input disabled value={password} onChange={(e)=> setPassword(e.target.value) } type="password" placeholder='senha' />
+           <button disabled onClick={Login}>
+                    {loading ?
+                    <div className="loader">
+                    <Loader.ThreeDots
+                        color="white"
+                        height={70}
+                        width={70}
+                        timeout={3000}
+                    />
+                    </div>
+                    :
+                    <h1>Entrar</h1>  
+                    }
+            </button>
+           </>
            
-            <Input value={email} onChange={(e)=> setEmail(e.target.value) } type="email" placeholder='email' /> 
-            <Input value={password} onChange={(e)=> setPassword(e.target.value) } type="password" placeholder='senha' />
+           :
+           <>
+           <Input value={email} onChange={(e)=> setEmail(e.target.value) } type="email" placeholder='email' /> 
+           <Input value={password} onChange={(e)=> setPassword(e.target.value) } type="password" placeholder='senha' />
+           <button onClick={Login}>
+                    {loading ?
+                    <div className="loader">
+                    <Loader.ThreeDots
+                        color="white"
+                        height={70}
+                        width={70}
+                        timeout={3000}
+                    />
+                    </div>
+                    :
+                    <h1>Entrar</h1>  
+                    }
+            </button>
+           </>
+           }
             
-                <button onClick={Login}>
-                    <h1>Entrar</h1>
-                </button>
                 <Link style={{textDecoration:'none'}} to={"/cadastro"}>
                     <h2>Não tem uma conta? Cadastre-se!</h2>
                 </Link>
@@ -59,6 +99,9 @@ const Container = styled.div`
         background: #52B6FF;
         border-radius: 5px;
         border: 1px solid #52B6FF;
+        display:flex;
+        flex-direction:center;
+        align-items:center;
         h1 {
             font-family: 'Lexend Deca';
             font-style: normal;
@@ -66,6 +109,10 @@ const Container = styled.div`
             font-size: 21px;
             text-align: center;
             color: #FFFFFF;
+            margin: 0 auto;
+        }
+        .loader {
+            margin: 0 auto;
         }
     }
     h2 {

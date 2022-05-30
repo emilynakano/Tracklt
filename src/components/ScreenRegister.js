@@ -9,11 +9,12 @@ export default function ScreenLogin () {
     const [password, setPassword] = useState("")
     const [name, setName] = useState("")
     const [image, setImage] = useState("")
+    const [loading, setLoading] = useState(false)
 
     const navigate = useNavigate()
 
     function SignUp() {
-
+        setLoading(true)
         const body = {
             email,
             name,
@@ -28,6 +29,10 @@ export default function ScreenLogin () {
             console.log(res.data)
             navigate("/")
         })
+        promise.catch(()=> {
+            alert("preencha os campos corretamente <3")
+            setLoading(false)
+        })
             
     }
     return (
@@ -36,15 +41,27 @@ export default function ScreenLogin () {
                 <img src='img/logo.png'/>
             </Logo>
             <Container>
-           
+                {loading ?
+                <>
+                <Input disabled value={email} onChange={(e)=> setEmail(e.target.value) } type="email" placeholder='email' /> 
+                <Input disabled value={password} onChange={(e)=> setPassword(e.target.value) } type="password" placeholder='senha' />
+                <Input disabled value={name} onChange={(e)=> setName(e.target.value) } type="text" placeholder='nome' /> 
+                <Input disabled value={image} onChange={(e)=> setImage(e.target.value) } type="text" placeholder='foto' />
+                <button disabled onClick={SignUp}>
+                    <h1>Cadastrar</h1>
+                </button>
+                </> 
+                :
+                <>
                 <Input value={email} onChange={(e)=> setEmail(e.target.value) } type="email" placeholder='email' /> 
                 <Input value={password} onChange={(e)=> setPassword(e.target.value) } type="password" placeholder='senha' />
                 <Input value={name} onChange={(e)=> setName(e.target.value) } type="text" placeholder='nome' /> 
                 <Input value={image} onChange={(e)=> setImage(e.target.value) } type="text" placeholder='foto' />
-            
                 <button onClick={SignUp}>
                     <h1>Cadastrar</h1>
                 </button>
+                </> 
+                }
                 <Link style={{textDecoration:'none'}} to={"/"}>
                     <h2>Já tem uma conta? Faça login!</h2>
                 </Link>

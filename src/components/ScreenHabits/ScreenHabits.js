@@ -8,6 +8,7 @@ import UserContext from "../../contexts/UserContext";
 import axios from "axios";
 import {Link} from "react-router-dom";
 import percentageContext from "../../contexts/percentageContext";
+
 export default function ScreenHabits () {
     const [atualization, setAtualization] = useState("")
     const [createHabit, setCreateHabit] = useState(false)

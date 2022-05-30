@@ -45,7 +45,7 @@ export default function ScreenLogin () {
                 <button onClick={SignUp}>
                     <h1>Cadastrar</h1>
                 </button>
-                <Link to={"/"}>
+                <Link style={{textDecoration:'none'}} to={"/"}>
                     <h2>Já tem uma conta? Faça login!</h2>
                 </Link>
             </Container>

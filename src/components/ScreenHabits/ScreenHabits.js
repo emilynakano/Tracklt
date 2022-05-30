@@ -6,10 +6,13 @@ import CreateHabit from "./CreateHabit";
 import Saved from "./Saved";
 import UserContext from "../../contexts/UserContext";
 import axios from "axios";
+import {Link} from "react-router-dom";
 
 export default function ScreenHabits () {
+    const [atualization, setAtualization] = useState("")
     const [createHabit, setCreateHabit] = useState(false)
     const [habits, setHabits] = useState([]);
+    console.log(habits)
 
     const {user} = useContext(UserContext);
 
@@ -21,7 +24,7 @@ export default function ScreenHabits () {
         }
         const promise = axios.get("https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits", config);
         promise.then(res => setHabits(res.data))
-    })
+    }, [atualization])
     const percentage = 80;
     return (
         <Container>
@@ -34,14 +37,17 @@ export default function ScreenHabits () {
                     <h1>Meus hábitos</h1> 
                     <button onClick={()=> setCreateHabit(true)}>+</button>
                 </Tittle>
-                {createHabit ? <CreateHabit setCreateHabit={setCreateHabit}/> : ""}
-                {habits == [] ? <h2>Você não tem nenhum hábito cadastrado ainda. Adicione um hábito para começar a trackear!</h2> : habits.map((habit) => <Saved habit={habit}/>)}
+                {createHabit ? <CreateHabit atualization={atualization} setAtualization={setAtualization} setCreateHabit={setCreateHabit}/> : ""}
+                {habits.length == 0 ? <h2>Você não tem nenhum hábito cadastrado ainda. Adicione um hábito para começar a trackear!</h2> : habits.map((habit) => <Saved atualization={atualization} setAtualization={setAtualization} habit={habit}/>)}
               
 
             </Main>
-            <Footer>
+            <Footer> 
+                <Link style={{textDecoration:'none'}} to={"/habitos"}>
                 <h1>Hábitos</h1>
+                </Link>
                 <div>
+                <Link style={{textDecoration:'none'}} to={"/hoje"}>
                     <CircularProgressbar
                         value={percentage}
                         text={`hoje`}
@@ -55,8 +61,11 @@ export default function ScreenHabits () {
                             trailColor: '#52B6FF',
                         })}
                     />
+                </Link>
                 </div>
+                <Link style={{textDecoration:'none'}} to={"/historico"}>
                 <h1>Histórico</h1>
+                </Link>
             </Footer>
 
         
@@ -64,7 +73,8 @@ export default function ScreenHabits () {
     )
 }
 const Container = styled.div`
-    height: 100%;
+    min-height: 600px;
+    max-height: 100%;
     padding-bottom: 15px;
     background:#E5E5E5;
 `;
@@ -79,6 +89,9 @@ const Footer = styled.footer`
     bottom:0;
     position:fixed;
     background:#FFFFFF;
+    Link {
+        text-decoration:none;
+    }
     h1 {
         font-family: 'Lexend Deca';
         font-style: normal;

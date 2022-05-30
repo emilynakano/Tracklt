@@ -1,18 +1,19 @@
 import  React, { useState, useEffect, useContext } from 'react';
 import styled from "styled-components";
 import OptionsDay from "./OptionsDay";
+import DaysContext from "../../contexts/DaysContext"
 import UserContext from "../../contexts/UserContext";
 import axios from "axios"
 
 export default function CreateHabit (props) {
-    const { setCreateHabit} = props;
+    const { setCreateHabit, atualization, setAtualization} = props;
     const [habito, setHabito] = useState("")
     return (
 
         <Container>
             <input value={habito} onChange={(e)=> setHabito(e.target.value)} type='text' placeholder='nome do hábito' />
             <OptionsDay />
-            <Finished habito={habito} setCreateHabit={setCreateHabit}/>
+            <Finished atualization={atualization} setAtualization={setAtualization} habito={habito} setCreateHabit={setCreateHabit}/>
         
         </Container>
     )
@@ -20,7 +21,8 @@ export default function CreateHabit (props) {
 
 function Finished(props) {
     const {user} = useContext(UserContext)
-    const {setCreateHabit, habito} = props;
+    const {setDay, day} = useContext(DaysContext)
+    const {setCreateHabit, habito, atualization, setAtualization} = props;
     return (
         <Buttons>
             <h1 onClick={()=> setCreateHabit(false)}>Cancelar</h1>
@@ -32,9 +34,17 @@ function Finished(props) {
                     }
                     const body = {
                         name: habito,
-                        days: [2, 3, 0] // segunda, quarta e sexta
+                        days: day
                     }
-                    axios.post("https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits", body, config);
+                    const promise = axios.post("https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits", body, config);
+                    promise.then(res => {
+                        if(atualization == "changes") {
+                            setAtualization("AnotherChanges")
+                        } else {
+                            setAtualization("changes")
+                        }
+                        setCreateHabit(false)})
+                    setDay([])
                     }}>
                 <h1>Salvar</h1>
             </button>

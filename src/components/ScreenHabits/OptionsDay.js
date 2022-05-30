@@ -1,26 +1,30 @@
 import styled from "styled-components";
-import { useState } from "react"
+import { useState, useContext } from "react"
+import DayContext from "../../contexts/DaysContext";
 
 export default function OptionsDay() {
-    const days = ["D", "S", "T", "Q", "Q", "S", "S"]
+    const dias = ["D", "S", "T", "Q", "Q", "S", "S"]
     return (
         <OptionsDays>
-            {days.map((day)=><Days day={day}/> )}
+            {dias.map((dia, index)=><Days index={index} dia={dia}/> )}
         </OptionsDays>
     )
 }
 
 function Days(props) {
-    const { day } = props;
+    const { dia, index } = props;
     const [color, setColor] = useState("withouChanges")
+    const {day, setDay} = useContext(DayContext)
     return (
         <button className={color} onClick={()=>{
             if(color == "changes") {
                 setColor("withouChanges")
+
             } else {
+                setDay([...day, index])
                 setColor("changes")
             }
-        }}> <h1>{day}</h1></button>
+        }}> <h1>{dia}</h1></button>
     )
 }
 const OptionsDays = styled.div`

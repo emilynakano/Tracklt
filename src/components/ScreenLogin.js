@@ -37,7 +37,7 @@ export default function ScreenLogin () {
                 <button onClick={Login}>
                     <h1>Entrar</h1>
                 </button>
-                <Link to={"/cadastro"}>
+                <Link style={{textDecoration:'none'}} to={"/cadastro"}>
                     <h2>Não tem uma conta? Cadastre-se!</h2>
                 </Link>
             </Container>

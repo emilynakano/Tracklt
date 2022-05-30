@@ -1,5 +1,5 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { Fragment, useState } from "react";
+import { useState } from "react";
 import GlobalStyle from "../theme/GlobalStyle";
 import UserContext from "../contexts/UserContext";
 import DaysContext from "../contexts/DaysContext"

@@ -35,7 +35,7 @@ export default function ScreenToday () {
         }
         const promise = axios.get("https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/today", config);
         promise.then(res => {setHabitsToday(res.data)
-        console.log(habitsToday)})
+       })
     }, [atualization])
     let feito = 0;
     for(let i = 0; i < habitsToday.length; i ++) {
@@ -43,20 +43,19 @@ export default function ScreenToday () {
             feito += 1;
         }
     }
-    console.log(feito)
     setPercentage((feito / habitsToday.length) * 100);
     
     return (
         <Container>
             <Header>
                 <h1>Tracklt</h1>
-                <img src={user.image} />
+                <img src={user.image} alt={user.image}/>
             </Header>
             <Main>
                 <h1>{dia}, {data}</h1>
-                {feito == 0 ? <h2>Nenhum hábito concluído ainda</h2> : <h3>{parseInt(percentage)}% dos habitos concluidos</h3>}
+                {feito === 0 ? <h2>Nenhum hábito concluído ainda</h2> : <h3>{parseInt(percentage)}% dos habitos concluidos</h3>}
             
-                {habitsToday.map((habit)=> <HabitToday setAtualization={setAtualization} atualization={atualization} habit={habit} />)}
+                {habitsToday.map((habit)=> <HabitToday key={habit.id} setAtualization={setAtualization} atualization={atualization} habit={habit} />)}
 
             </Main>
             <Footer> 
@@ -102,7 +101,7 @@ function HabitToday(props) {
             }
             const promise = axios.post(`https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/${habit.id}/uncheck`, {}, config);
             promise.then(()=> {
-                if(atualization == "change") {
+                if(atualization === "change") {
                     setAtualization("AnotherChange")
                 } else {
                     setAtualization("change")
@@ -116,7 +115,7 @@ function HabitToday(props) {
             }
             const promise = axios.post(`https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/${habit.id}/check`, {}, config);
             promise.then(()=> {
-                if(atualization == "change") {
+                if(atualization === "change") {
                     setAtualization("AnotherChange")
                 } else {
                     setAtualization("change")
@@ -125,16 +124,16 @@ function HabitToday(props) {
         }
     }
     return (
-    <div className="habito">
+    <Habito done={habit.done} currentSequence={habit.currentSequence} highestSequence={habit.highestSequence}>
         <div>
             <h1>{habit.name}</h1>
-            <h2>Sequência atual: {habit.currentSequence} dias</h2>
-            <h2>Seu recorde: {habit.highestSequence} dias</h2>
+            <h2>Sequência atual: <h4>{habit.currentSequence} {habit.currentSequence === 1 ? 'dia' : 'dias'}</h4></h2>
+            <h2>Seu recorde: <h5>{habit.highestSequence} {habit.currentSequence === 1 ? 'dia' : 'dias'}</h5></h2>
         </div>
         <Button color={habit.done} onClick={HabitReady}>
-            <img src="./img/Vector.svg" />
+            <img src="./img/Vector.svg" alt="./img/Vector.svg"/>
         </Button>
-    </div>
+    </Habito>
     )
 }
 const Button = styled.button`
@@ -174,7 +173,8 @@ h3 {
     line-height: 22px;
     color: #8FC549;
 }
-.habito {
+`;
+const Habito = styled.div`
     background-color:#ffffff;
     margin-top:20px;
     padding: 10px;
@@ -182,11 +182,20 @@ h3 {
     justify-content: space-between;
     align-items:center;
     border-radius: 5px;
+    h2 {
+        display:flex;
+    }
     h1 {
         color: #666666;
         font-size: 18px;
     }
-}
+    h4 {
+        margin-left:5px;
+        color:${props => props.done ? '#8FC549' : 'black'};
+    }
+    h5 {
+        color: ${props => props.done ? props.currentSequence === props.highestSequence ? '#8FC549' : 'black' : 'black'}
+    }
 `;
 const Container = styled.div`
     min-height: 600px;
@@ -247,31 +256,5 @@ const Header = styled.header`
         width: 51px;
         height: 51px;
         border-radius: 98.5px;
-    }
-`;
-const Tittle = styled.div`
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    margin-bottom: 30px;
-    h1 {
-        margin-top:30px;
-        font-family: 'Lexend Deca';
-        font-style: normal;
-        font-weight: 400;
-        font-size: 23px;
-        color: #126BA5;
-    }
-    button {
-        margin-top:30px;
-        width: 40px;
-        height: 35px;
-        left: 317px;
-        top: 92px;
-        border: none;
-        background: #52B6FF;
-        border-radius: 4.63636px;
-        font-size:27px;
-        color: #FFFFFF;
     }
 `;

@@ -1,4 +1,4 @@
-import  React, { useState, useEffect, useContext } from 'react';
+import  React, { useState, useContext } from 'react';
 import styled from "styled-components";
 import OptionsDay from "./OptionsDay";
 import DaysContext from "../../contexts/DaysContext"
@@ -10,12 +10,14 @@ import * as Loader from "react-loader-spinner";
 export default function CreateHabit (props) {
     const { setCreateHabit, atualization, setAtualization} = props;
     const [habito, setHabito] = useState("")
+    const [loading, setLoading] = useState(false)
     return (
 
         <Container>
-            <input value={habito} onChange={(e)=> setHabito(e.target.value)} type='text' placeholder='nome do hábito' />
-            <OptionsDay />
-            <Finished atualization={atualization} setAtualization={setAtualization} habito={habito} setCreateHabit={setCreateHabit}/>
+            {loading ? <input disabled value={habito} onChange={(e)=> setHabito(e.target.value)} type='text' placeholder='nome do hábito' /> : <input value={habito} onChange={(e)=> setHabito(e.target.value)} type='text' placeholder='nome do hábito' />}
+            
+            <OptionsDay loading={loading} setLoading={setLoading}/>
+            <Finished loading={loading} setLoading={setLoading} atualization={atualization} setAtualization={setAtualization} habito={habito} setCreateHabit={setCreateHabit}/>
         
         </Container>
     )
@@ -24,8 +26,7 @@ export default function CreateHabit (props) {
 function Finished(props) {
     const {user} = useContext(UserContext)
     const {setDay, day} = useContext(DaysContext)
-    const {setCreateHabit, habito, atualization, setAtualization} = props;
-    const [loading, setLoading] = useState(false)
+    const {setCreateHabit, habito, atualization, setAtualization, loading, setLoading} = props;
 
     function Send() {
         setLoading(true)
@@ -39,20 +40,24 @@ function Finished(props) {
             days: day
         }
         const promise = axios.post("https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits", body, config);
-        promise.then(res => {
-            if(atualization == "changes") {
+        promise.then(() => {
+            if(atualization === "changes") {
                 setAtualization("AnotherChanges")
             } else {
                 setAtualization("changes")
             }
             setCreateHabit(false)})
+        promise.catch(()=> {
+            alert("preencha os campos corretamente")
+            setLoading(false)
+        })  
         setDay([])
     }
     return (
         <Buttons>
             <h1 onClick={()=> setCreateHabit(false)}>Cancelar</h1>
-            <button onClick={Send}>
-                {loading ?
+            {loading ? 
+            <button disabled >
                 <div className="load">
                     <Loader.ThreeDots
                     color="white"
@@ -60,11 +65,13 @@ function Finished(props) {
                     width={30}
                     timeout={3000}
                     />
-                </div>
-                :
-                <h1>Salvar</h1>}
-                
+                </div>   
             </button>
+            :
+            <button onClick={Send}>
+                <h1>Salvar</h1> 
+            </button>}
+            
         </Buttons>
     )
 }

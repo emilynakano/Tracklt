@@ -33,7 +33,7 @@ export default function ScreenLogin () {
     return (
         <>
             <Logo>
-                <img src='img/logo.png'/>
+                <img src='img/logo.png'alt='img/logo.png'/>
             </Logo>
             <Container>
            {loading ?

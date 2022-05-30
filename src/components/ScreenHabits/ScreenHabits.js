@@ -13,8 +13,7 @@ export default function ScreenHabits () {
     const [atualization, setAtualization] = useState("")
     const [createHabit, setCreateHabit] = useState(false)
     const [habits, setHabits] = useState([]);
-    const {percentage, setPercentage} = useContext(percentageContext)
-    console.log(habits)
+    const {percentage} = useContext(percentageContext)
 
     const {user} = useContext(UserContext);
 
@@ -31,7 +30,7 @@ export default function ScreenHabits () {
         <Container>
             <Header>
                 <h1>Tracklt</h1>
-                <img src={user.image} />
+                <img src={user.image} alt={user.image} />
             </Header>
             <Main>
                 <Tittle>
@@ -39,7 +38,7 @@ export default function ScreenHabits () {
                     <button onClick={()=> setCreateHabit(true)}>+</button>
                 </Tittle>
                 {createHabit ? <CreateHabit atualization={atualization} setAtualization={setAtualization} setCreateHabit={setCreateHabit}/> : ""}
-                {habits.length == 0 ? <h2>Você não tem nenhum hábito cadastrado ainda. Adicione um hábito para começar a trackear!</h2> : habits.map((habit) => <Saved atualization={atualization} setAtualization={setAtualization} habit={habit}/>)}
+                {habits.length === 0 ? <h2>Você não tem nenhum hábito cadastrado ainda. Adicione um hábito para começar a trackear!</h2> : habits.map((habit) => <Saved key={habit.id} atualization={atualization} setAtualization={setAtualization} habit={habit}/>)}
               
 
             </Main>

@@ -1,20 +1,19 @@
 import styled from "styled-components";
 import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
-import React, { useContext, useState, useEffect } from 'react';
+import React, { useContext } from 'react';
 import UserContext from "../contexts/UserContext";
-import axios from "axios";
 import {Link} from "react-router-dom";
 import percentageContext from "../contexts/percentageContext";
 
 export default function ScreenHistoric () {
-    const {percentage, setPercentage} = useContext(percentageContext)
+    const {percentage} = useContext(percentageContext)
     const {user} = useContext(UserContext)
     return (
         <Container>
             <Header>
                 <h1>Tracklt</h1>
-                <img src={user.image} />
+                <img src={user.image} alt={user.image}/>
             </Header>
             <Main>
                 <h1>Histórico</h1>
@@ -50,13 +49,6 @@ export default function ScreenHistoric () {
         </Container>
     )
 }
-const Button = styled.button`
-    background-color: ${props => props.color ? '#8FC549' : '#EBEBEB'};
-    border: 1px solid #E7E7E7;
-    border-radius: 5px;
-    width: 70px;
-    height: 70px;
-`
 const Main = styled.div`
 margin: 0 20px;
 margin-top:70px;
@@ -140,31 +132,5 @@ const Header = styled.header`
         width: 51px;
         height: 51px;
         border-radius: 98.5px;
-    }
-`;
-const Tittle = styled.div`
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    margin-bottom: 30px;
-    h1 {
-        margin-top:30px;
-        font-family: 'Lexend Deca';
-        font-style: normal;
-        font-weight: 400;
-        font-size: 23px;
-        color: #126BA5;
-    }
-    button {
-        margin-top:30px;
-        width: 40px;
-        height: 35px;
-        left: 317px;
-        top: 92px;
-        border: none;
-        background: #52B6FF;
-        border-radius: 4.63636px;
-        font-size:27px;
-        color: #FFFFFF;
     }
 `;

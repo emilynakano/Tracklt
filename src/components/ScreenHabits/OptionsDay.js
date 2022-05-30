@@ -2,29 +2,40 @@ import styled from "styled-components";
 import { useState, useContext } from "react"
 import DayContext from "../../contexts/DaysContext";
 
-export default function OptionsDay() {
+export default function OptionsDay(props) {
+    const {loading, setLoading} = props;
     const dias = ["D", "S", "T", "Q", "Q", "S", "S"]
     return (
         <OptionsDays>
-            {dias.map((dia, index)=><Days index={index} dia={dia}/> )}
+            {dias.map((dia, index)=><Days loading={loading} setLoading={setLoading} index={index} dia={dia}/> )}
         </OptionsDays>
     )
 }
 
 function Days(props) {
-    const { dia, index } = props;
+    const { dia, index, loading } = props;
     const [color, setColor] = useState("withouChanges")
     const {day, setDay} = useContext(DayContext)
-    return (
-        <button className={color} onClick={()=>{
-            if(color == "changes") {
-                setColor("withouChanges")
+    function ChangeColor() {
+        if(color === "changes") {
+            setColor("withouChanges")
 
-            } else {
-                setDay([...day, index])
-                setColor("changes")
-            }
-        }}> <h1>{dia}</h1></button>
+        } else {
+            setDay([...day, index])
+            setColor("changes")
+        }
+    }
+    return (
+        <>
+        {loading ?  
+            <button disabled className={color}> 
+            <h1>{dia}</h1>
+            </button> 
+            :  
+            <button className={color} onClick={ChangeColor}> 
+            <h1>{dia}</h1>
+            </button>}
+        </>
     )
 }
 const OptionsDays = styled.div`

@@ -21,12 +21,10 @@ export default function ScreenLogin () {
             image,
             password
         }
-        console.log(body)
 
         const promise = axios.post("https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/auth/sign-up", body)
 
         promise.then(res => {
-            console.log(res.data)
             navigate("/")
         })
         promise.catch(()=> {
@@ -38,7 +36,7 @@ export default function ScreenLogin () {
     return (
         <>
             <Logo>
-                <img src='img/logo.png'/>
+                <img src='img/logo.png' alt='img/logo.png'/>
             </Logo>
             <Container>
                 {loading ?

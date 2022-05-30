@@ -1,5 +1,4 @@
 import styled from "styled-components";
-import { useState } from "react"
 import UserContext from "../../contexts/UserContext"
 import { useContext } from "react"
 import axios from "axios"
@@ -7,29 +6,28 @@ import axios from "axios"
 export default function Saved(props) {
     const {user} = useContext(UserContext)
     const {habit, atualization, setAtualization} = props;
+    function Delete() {
+        if(window.confirm("deseja deletar?")) {
+            const promise = axios.delete(`https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/${habit.id}`, {
+            headers: {
+              Authorization: `Bearer ${user.token}`
+            }
+          });
+          promise.then(()=> {
+            if(atualization === "changes") {
+                setAtualization("AnotherChanges")
+            } else {
+                setAtualization("changes")
+            }
+          })
+        }
+        
+    }
     return (
         <Container>
             <div className="header">
                 <h2>{habit.name}</h2>
-                <svg onClick={()=> {
-                    
-
-                    if(window.confirm("deseja deletar?")) {
-                        const promise = axios.delete(`https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/${habit.id}`, {
-                        headers: {
-                          Authorization: `Bearer ${user.token}`
-                        }
-                      });
-                      promise.then(()=> {
-                        if(atualization == "changes") {
-                            setAtualization("AnotherChanges")
-                        } else {
-                            setAtualization("changes")
-                        }
-                      })
-                    }
-                    
-                }} width={20} xmlns="http://www.w3.org/2000/svg" class="ionicon" viewBox="0 0 512 512"><title>Trash</title><path d="M112 112l20 320c.95 18.49 14.4 32 32 32h184c17.67 0 30.87-13.51 32-32l20-320" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/><path stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="32" d="M80 112h352"/><path d="M192 112V72h0a23.93 23.93 0 0124-24h80a23.93 23.93 0 0124 24h0v40M256 176v224M184 176l8 224M328 176l-8 224" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/></svg>
+                <ion-icon onClick={Delete} name="trash-outline"></ion-icon>
             </div>
             <OptionsDay habit={habit}/>
         
@@ -50,7 +48,7 @@ function Days(props) {
     const { day, index, habit } = props;
     let color = "withouChanges";
     for(let i = 0; i < habit.days.length; i ++) {
-        if(habit.days[i] == index) {
+        if(habit.days[i] === index) {
             color = "changes";
         }
     }
@@ -76,6 +74,7 @@ const Container = styled.div`
         font-weight: 400;
         font-size: 21px;
         color: #666666;
+        word-wrap:wrap;
     }
 
 `;
